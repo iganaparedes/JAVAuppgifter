@@ -1,17 +1,16 @@
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -19,12 +18,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GUImenu extends GUI implements ActionListener {
 
 	JButton buttonLoad;
-	JButton buttonOne;
+	JButton buttonRotate;
 	JButton buttonTwo;
 	JButton buttonThree;
 	JFrame frame = new JFrame();
@@ -48,36 +46,33 @@ public class GUImenu extends GUI implements ActionListener {
 
 		panelThree.setBackground(Color.blue);
 		panelThree.setBounds(0, 250, 500, 250);
-		
-		
-		buttonOne = new JButton("Rotate");
-		buttonOne.setFocusable(false);
-		buttonOne.addActionListener(this);
-		buttonOne.setActionCommand("resize");
-	
-		
-		
-		
-		
+
+		buttonRotate = new JButton("Rotate");
+		buttonRotate.setFocusable(false);
+		buttonRotate.addActionListener(this);
+		buttonRotate.setActionCommand("rotate");
+
 		buttonTwo = new JButton("Color");
 		buttonTwo.setFocusable(false);
 		buttonTwo.addActionListener(this);
-		
-		buttonThree = new JButton("Size");
+		buttonTwo.setActionCommand("color");
+
+		buttonThree = new JButton("Resize");
 		buttonThree.setFocusable(false);
 		buttonThree.addActionListener(this);
-		
-		
+		buttonThree.setActionCommand("resize");
 
-		panelOne.add(buttonOne);
+		panelOne.add(buttonRotate);
 		panelTwo.add(buttonTwo);
 		panelThree.add(buttonThree);
 		frame.add(panelOne);
 		frame.add(panelTwo);
 		frame.add(panelThree);
-		buttonLoad = new JButton("click me");
+
+		buttonLoad = new JButton("Load image");
 		buttonLoad.setFocusable(false);
 		buttonLoad.addActionListener(this);
+
 		frame.setTitle("Welcome");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
@@ -97,12 +92,23 @@ public class GUImenu extends GUI implements ActionListener {
 
 	}
 	
+	public void updatewithImg(BufferedImage bufferedImage) {
 
-	
+		labelOne.setIcon(new ImageIcon(bufferedImage));
+
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		System.out.println(e.getActionCommand());
+		ImageEdit editImg = new ImageEdit();
+		if (e.getActionCommand().equalsIgnoreCase("resize")) {
+			
+			
+			updatewithImg(editImg.buttonResize(origImage));
 
-		if (e.getSource() == buttonLoad) {
+		} else if (e.getSource() == buttonLoad) {
 
 			fileChooser = new JFileChooser();
 			fileChooser.setDialogTitle("Please choose an image!");
@@ -117,24 +123,21 @@ public class GUImenu extends GUI implements ActionListener {
 					labelOne.setText("Here is your image!");
 
 					updateImg();
-				
 
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
+				
+			}
+			ImageEdit editImg2 = new ImageEdit();
+			 if (e.getActionCommand().equalsIgnoreCase("rotate")) {
+				
+				updatewithImg(editImg2.buttonRotate(origImage));
+			
 
 			}
-			
-			}
-			
-			
-		}
-		
-			
-			
-			
-		}
-		
-		
-	
 
+		}
+
+	}
+}
