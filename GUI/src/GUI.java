@@ -1,18 +1,9 @@
 
-
 public class GUI {
-	
-	
-
-	
-	
 
 	public static void main(String[] args) {
-		
-		new GUImenu();
-		
-		
-		
+
+		new GUImenu(); // calls the GUImenu class
 
 	}
 

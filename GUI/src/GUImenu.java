@@ -1,15 +1,12 @@
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,16 +16,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-public class GUImenu extends GUI implements ActionListener {
+public class GUImenu extends GUI implements ActionListener { //creates a new class that extends the main function in GUI.java, implements the ActionListener class that includes a method for the user to be able to perform actions and
+	// declutters the superclass that is GUI.java and adds more methods and functions
 
-	JButton buttonLoad;
+	JButton buttonLoadImage;
 	JButton buttonRotate;
-	JButton buttonTwo;
-	JButton buttonThree;
+	JButton buttonColor;
+	JButton buttonResize;
 	JFrame frame = new JFrame();
-	JPanel panelOne = new JPanel();
-	JPanel panelTwo = new JPanel();
-	JPanel panelThree = new JPanel();
+	JPanel panelButtonRotate = new JPanel();
+	JPanel panelButtonColor = new JPanel();
+	JPanel panelButtonResize = new JPanel();
 	JLabel labelOne = new JLabel();
 	JLabel labelTwo = new JLabel();
 	ImageIcon image = new ImageIcon();
@@ -36,42 +34,37 @@ public class GUImenu extends GUI implements ActionListener {
 	Border border = BorderFactory.createLineBorder(Color.green, 5);
 	BufferedImage origImage;
 
-	public GUImenu() {
+	public GUImenu() { //builds the GUI frame, sets values of each component
 
-		panelOne.setBackground(Color.red);
-		panelOne.setBounds(0, 0, 250, 250);
-
-		panelTwo.setBackground(Color.green);
-		panelTwo.setBounds(250, 0, 250, 250);
-
-		panelThree.setBackground(Color.blue);
-		panelThree.setBounds(0, 250, 500, 250);
-
-		buttonRotate = new JButton("Rotate");
+		panelButtonRotate.setBackground(Color.red);
+		panelButtonColor.setBackground(Color.green);
+		panelButtonResize.setBackground(Color.blue);
+		
+		buttonRotate = new JButton("rotate");
 		buttonRotate.setFocusable(false);
 		buttonRotate.addActionListener(this);
-		buttonRotate.setActionCommand("rotate");
+		buttonRotate.setActionCommand("Rotate");
 
-		buttonTwo = new JButton("Color");
-		buttonTwo.setFocusable(false);
-		buttonTwo.addActionListener(this);
-		buttonTwo.setActionCommand("color");
+		buttonColor = new JButton("color");
+		buttonColor.setFocusable(false);
+		buttonColor.addActionListener(this);
+		buttonColor.setActionCommand("Color");
 
-		buttonThree = new JButton("Resize");
-		buttonThree.setFocusable(false);
-		buttonThree.addActionListener(this);
-		buttonThree.setActionCommand("resize");
+		buttonResize = new JButton("resize");
+		buttonResize.setFocusable(false);
+		buttonResize.addActionListener(this);
+		buttonResize.setActionCommand("Resize");
 
-		panelOne.add(buttonRotate);
-		panelTwo.add(buttonTwo);
-		panelThree.add(buttonThree);
-		frame.add(panelOne);
-		frame.add(panelTwo);
-		frame.add(panelThree);
+		panelButtonRotate.add(buttonRotate);
+		panelButtonColor.add(buttonColor);
+		panelButtonResize.add(buttonResize);
+		frame.add(panelButtonRotate);
+		frame.add(panelButtonColor);
+		frame.add(panelButtonResize);
 
-		buttonLoad = new JButton("Load image");
-		buttonLoad.setFocusable(false);
-		buttonLoad.addActionListener(this);
+		buttonLoadImage = new JButton("Load image");
+		buttonLoadImage.setFocusable(false);
+		buttonLoadImage.addActionListener(this);
 
 		frame.setTitle("Welcome");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,36 +72,29 @@ public class GUImenu extends GUI implements ActionListener {
 		frame.setSize(800, 800);
 		frame.setLayout(new FlowLayout());
 
-		frame.add(buttonLoad);
+		frame.add(buttonLoadImage);
 		frame.add(labelOne);
 		frame.add(labelTwo);
-
+		
 		frame.setVisible(true);
 	}
 
-	public void updateImg() {
+	public void updateImg() { //sets the loaded image as default/original
 
 		labelOne.setIcon(new ImageIcon(origImage));
 
 	}
-	
-	public void updatewithImg(BufferedImage bufferedImage) {
+
+	public void updateWithImg(BufferedImage bufferedImage) { //sets the loaded image as updated when using ImageEdit functions
 
 		labelOne.setIcon(new ImageIcon(bufferedImage));
 
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		System.out.println(e.getActionCommand());
-		ImageEdit editImg = new ImageEdit();
-		if (e.getActionCommand().equalsIgnoreCase("resize")) {
-			
-			
-			updatewithImg(editImg.buttonResize(origImage));
+	public void actionPerformed(ActionEvent e) {  //the actions that can be performed with the buttons that update the image
 
-		} else if (e.getSource() == buttonLoad) {
+		if ((e.getSource() == buttonLoadImage)) {
 
 			fileChooser = new JFileChooser();
 			fileChooser.setDialogTitle("Please choose an image!");
@@ -121,23 +107,32 @@ public class GUImenu extends GUI implements ActionListener {
 				try {
 					origImage = ImageIO.read(file);
 					labelOne.setText("Here is your image!");
-
 					updateImg();
 
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
-				
 			}
-			ImageEdit editImg2 = new ImageEdit();
-			 if (e.getActionCommand().equalsIgnoreCase("rotate")) {
-				
-				updatewithImg(editImg2.buttonRotate(origImage));
-			
+		} else if (origImage != null) {
+
+			System.out.println(e.getActionCommand());
+			ImageEdit editImg = new ImageEdit();
+			if (e.getActionCommand().equalsIgnoreCase("resize")) {
+
+				updateWithImg(editImg.buttonResize(origImage));
+
+			} else if (e.getActionCommand().equalsIgnoreCase("rotate")) {
+				ImageEdit editImg2 = new ImageEdit();
+
+				updateWithImg(editImg2.buttonRotate(origImage));
+
+			} else if (e.getActionCommand().equalsIgnoreCase("color")) {
+				ImageEdit editImg3 = new ImageEdit();
+
+				updateWithImg(editImg3.buttonColor(origImage));
 
 			}
 
 		}
-
 	}
 }
