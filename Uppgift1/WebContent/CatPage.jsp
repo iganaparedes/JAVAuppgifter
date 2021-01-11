@@ -1,0 +1,1 @@
+<img src="https://placekitten.com/800/800" alt="cat">
